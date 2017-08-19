@@ -7,7 +7,18 @@ export default function IndexController (container) {
   this._postsView = new PostsView(this._container)
   this._toastsView = new ToastsView(this._container)
   this._lostConnectionToast = null
+  this._registerServiceWorker()
   this._openSocket()
+}
+
+IndexController.prototype._registerServiceWorker = function () {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('Service worker registration succeeded:', registration);
+    }).catch(function(error) {
+      console.log('Service worker registration failed:', error);
+    })
+  }
 }
 
 // open a connection to the server for live updates
