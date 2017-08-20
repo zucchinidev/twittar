@@ -12,13 +12,58 @@ export default function IndexController (container) {
 }
 
 IndexController.prototype._registerServiceWorker = function () {
-  if ('serviceWorker' in navigator) {
+  if (navigator.serviceWorker) {
     navigator.serviceWorker.register('/sw.js').then(registration => {
-      console.log('Service worker registration succeeded:', registration);
-    }).catch(function(error) {
-      console.log('Service worker registration failed:', error);
+
+      const hasLastVersionOfServiceWorker = navigator.serviceWorker.controller
+      if (!hasLastVersionOfServiceWorker) {
+        return
+      }
+
+      if (registration.waiting) {
+        this._updateReady(registration.waiting)
+        return
+      }
+
+      if (registration.installing) {
+        this._trackInstalling(registration.installing)
+      }
+
+      registration.addEventListener('updatefound', () => {
+        this._trackInstalling(registration.installing)
+      })
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        // When self.skipWaiting() is call
+        window.location.reload()
+      })
+
+    }).catch(function (error) {
+      console.log('Service worker registration failed:', error)
     })
   }
+}
+
+IndexController.prototype._updateReady = function (worker) {
+  const toast = this._toastsView.show('New version available', {
+    buttons: ['refresh', 'dismiss']
+  })
+
+  toast.answer.then(function (answer) {
+    if (answer !== 'refresh') {
+      return
+    }
+
+    worker.postMessage({action: 'skipWaiting'})
+  })
+}
+
+IndexController.prototype._trackInstalling = function (worker) {
+  worker.addEventListener('statechange', () => {
+    if (worker.state === 'installed') {
+      this._updateReady(worker)
+    }
+  })
 }
 
 // open a connection to the server for live updates

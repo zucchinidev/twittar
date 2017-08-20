@@ -1,4 +1,4 @@
-const twittarCacheName = 'twittar-static-v2'
+const twittarCacheName = 'twittar-static-v8'
 self.addEventListener('install', function (event) {
   const urlsToCache = [
     '/',
@@ -30,4 +30,10 @@ self.addEventListener('fetch', (event) => {
       return response || fetch(event.request)
     })
   )
+})
+
+self.addEventListener('message', function (event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting()
+  }
 })
