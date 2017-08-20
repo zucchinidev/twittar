@@ -107,7 +107,7 @@ export default {
       return fetch('/').then(response => {
         const type = response.headers.get('content-type')
 
-        if (!type || (type.toLowerCase() != 'text/html' && !type.toLowerCase().startsWith('text/html'))) {
+        if (!type || (type.toLowerCase() !== 'text/html' && !type.toLowerCase().startsWith('text/html'))) {
           return ['The response doesn\'t have the \'Content-Type: text/html\' header', 'nope.gif', false]
         }
 
