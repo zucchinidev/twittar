@@ -188,10 +188,10 @@ export default {
         'https://fonts.gstatic.com/s/roboto/v15/d-6IYplOFocCacKzxwXSOD8E0i7KZn-EPnyo3HZu7kw.woff'
       ].map(url => new URL(url, location).href)
 
-      return caches.has('wittr-static-v1').then(has => {
-        if (!has) return ['Can\'t find a cache named wittr-static-v1', 'nope.gif', false]
+      return caches.has('twittar-static-v1').then(has => {
+        if (!has) return ['Can\'t find a cache named twittar-static-v1', 'nope.gif', false]
 
-        return caches.open('wittr-static-v1').then(c => c.keys()).then(reqs => {
+        return caches.open('twittar-static-v1').then(c => c.keys()).then(reqs => {
           const urls = reqs.map(r => r.url)
           const allAccountedFor = expectedUrls.every(url => urls.includes(url))
 
