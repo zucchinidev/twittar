@@ -212,7 +212,9 @@ export default {
         const cachedResponse = responses[0]
         const jsonResponse = responses[1]
 
-        if (!jsonResponse.ok) return ['Doesn\'t look like non-cached requests are getting through', 'not-quite.gif', false]
+        if (!jsonResponse.ok) {
+          return ['Doesn\'t look like non-cached requests are getting through', 'not-quite.gif', false]
+        }
 
         return new Promise(r => setTimeout(r, 2000)).then(_ => fetch('/')).then(response => {
           if (cachedResponse.headers.get('Date') === response.headers.get('Date')) {
