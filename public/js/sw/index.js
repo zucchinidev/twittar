@@ -15,11 +15,9 @@ self.addEventListener('install', function (event) {
 self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(keyList => {
-      return Promise.all(keyList.map(function (key) {
-        if (key !== twittarCacheName) {
-          return caches.delete(key)
-        }
-      }))
+      keyList
+        .filter((cacheName) => cacheName.startsWith('twittar-') && cacheName !== twittarCacheName)
+        .map((cacheName) => caches.delete(cacheName))
     })
   )
 })
