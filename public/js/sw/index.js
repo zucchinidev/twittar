@@ -1,5 +1,5 @@
+const twittarCacheName = 'twittar-static-v2'
 self.addEventListener('install', function (event) {
-  const cacheName = 'twittar-static-v1'
   const urlsToCache = [
     '/',
     '/js/main.js',
@@ -8,7 +8,19 @@ self.addEventListener('install', function (event) {
   ]
   // twittar-static-v1
   event.waitUntil(
-    caches.open(cacheName).then((cache) => cache.addAll(urlsToCache))
+    caches.open(twittarCacheName).then((cache) => cache.addAll(urlsToCache))
+  )
+})
+
+self.addEventListener('activate', function (event) {
+  event.waitUntil(
+    caches.keys().then(keyList => {
+      return Promise.all(keyList.map(function (key) {
+        if (key !== twittarCacheName) {
+          return caches.delete(key)
+        }
+      }))
+    })
   )
 })
 
