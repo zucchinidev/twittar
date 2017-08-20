@@ -253,17 +253,17 @@ export default {
   ['new-cache-used'] () {
     return remoteEval(function () {
       return Promise.all([
-        caches.has('wittr-static-v1'),
-        caches.has('wittr-static-v2')
+        caches.has('twittar-static-v1'),
+        caches.has('twittar-static-v2')
       ]).then(hasCaches => {
         if (hasCaches[0]) return ['Looks like the v1 cache is still there', 'not-quite.gif', false]
-        if (!hasCaches[1]) return ['Can\'t find the wittr-static-v2 cache', 'sad.gif', false]
+        if (!hasCaches[1]) return ['Can\'t find the twittar-static-v2 cache', 'sad.gif', false]
 
         return Promise.all([
           fetch('/css/main.css'),
           new Promise(r => setTimeout(r, 2000)).then(_ => fetch('/css/main.css'))
         ]).then(responses => {
-          if (responses[0].headers.get('Date') != responses[1].headers.get('Date')) {
+          if (responses[0].headers.get('Date') !== responses[1].headers.get('Date')) {
             return ['Doesn\'t look like the CSS is being served from the cache', 'mistake.gif', false]
           }
 
@@ -272,7 +272,7 @@ export default {
             const doc = win.document
             const bg = win.getComputedStyle(doc.querySelector('.toolbar')).backgroundColor
 
-            if (bg == 'rgb(63, 81, 181)') {
+            if (bg === 'rgb(63, 81, 181)') {
               return ['Doesn\'t look like the header color has changed', 'no-cry.gif', false]
             }
             return ['Yay! You safely updated the CSS!', '12.gif', true]
@@ -327,7 +327,7 @@ export default {
         }
 
         return fetch('https://google.com/').then(r => r.text()).catch(e => '').then(gText => {
-          if (gText == text) {
+          if (gText === text) {
             return ['Looks like you\'re serving the skeleton for https://google.com/ too!', 'not-quite.gif', false]
           }
           return ['Yay! The page skeleton is being served!', '15.gif', true]
