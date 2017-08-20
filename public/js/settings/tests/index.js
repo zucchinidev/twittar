@@ -226,14 +226,14 @@ export default {
   ['new-cache-ready'] () {
     return remoteEval(function () {
       return Promise.all([
-        caches.has('wittr-static-v1'),
-        caches.has('wittr-static-v2')
+        caches.has('twittar-static-v1'),
+        caches.has('twittar-static-v2')
       ]).then(hasCaches => {
         if (!hasCaches[0]) return ['Looks like the v1 cache has already gone', 'sad.gif', false]
         if (!hasCaches[1]) return ['Can\'t find the wittr-static-v2 cache', 'sad.gif', false]
 
         return Promise.all(
-          ['wittr-static-v1', 'wittr-static-v2'].map(name => {
+          ['twittar-static-v1', 'twittar-static-v2'].map(name => {
             return caches.open(name)
               .then(c => c.match('/css/main.css'))
               .then(r => r && r.text())
